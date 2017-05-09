@@ -2,7 +2,7 @@ package io.voklim.mon.monitor.buffered.impl
 
 import io.voklim.mon.metrics.MetricKey
 import io.voklim.mon.monitor.buffered.BufferedMonitor
-import io.voklim.mon.common._
+import io.voklim.common._
 
 object NoopBufferedMonitor extends BufferedMonitor{
 

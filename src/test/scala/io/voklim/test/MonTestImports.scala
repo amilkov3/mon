@@ -1,6 +1,6 @@
-package io.voklim.mon.test
+package io.voklim.test
 
-import io.voklim.mon.config.{BufferedMonitorConf, CloudwatchConf, MonitorWatcherConf}
+import io.voklim.config.{BufferedMonitorConf, CloudwatchConf, MonitorWatcherConf}
 import io.voklim.mon.metrics.{MetricDomain, MetricKey, MetricName, MetricPrefix}
 import io.voklim.mon.monitor.buffered.AbstractQueuedMonitor
 

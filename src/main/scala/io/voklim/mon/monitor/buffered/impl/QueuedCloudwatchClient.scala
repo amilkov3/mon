@@ -1,6 +1,6 @@
 package io.voklim.mon.monitor.buffered.impl
 
-import io.voklim.mon.config.{CloudwatchConf, QueuedCloudwatchConf}
+import io.voklim.config.{CloudwatchConf, QueuedCloudwatchConf}
 import io.voklim.mon.metrics.MetricKey
 import io.voklim.mon.monitor.base.impl.CloudwatchClient
 import io.voklim.mon.monitor.buffered.AbstractQueuedMonitor

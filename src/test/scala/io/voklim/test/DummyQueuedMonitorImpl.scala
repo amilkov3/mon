@@ -1,8 +1,8 @@
-package io.voklim.mon.test
+package io.voklim.test
 
-import io.voklim.mon.config.BufferedMonitorConf
+import io.voklim.config.BufferedMonitorConf
 import io.voklim.mon.monitor.buffered.AbstractQueuedMonitor
-import io.voklim.mon.common._
+import io.voklim.common._
 
 class DummyQueuedMonitorImpl(conf: BufferedMonitorConf) extends AbstractQueuedMonitor(conf) {
   override def send(metric: Metric, metrics: Metric*): Unit = {

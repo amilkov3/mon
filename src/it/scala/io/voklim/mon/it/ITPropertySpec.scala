@@ -1,5 +1,5 @@
 package io.voklim.mon.it
 
-import io.voklim.mon.test.UnitPropertySpec
+import io.voklim.test.UnitPropertySpec
 
 abstract class ITPropertySpec extends UnitPropertySpec

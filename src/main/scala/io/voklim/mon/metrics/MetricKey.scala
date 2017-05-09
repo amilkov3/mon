@@ -1,7 +1,7 @@
 package io.voklim.mon.metrics
 
 import io.voklim.mon.monitor.base.Monitor
-import io.voklim.mon.common._
+import io.voklim.common._
 
 sealed abstract case class MetricKey(
    keyPrefix: MetricPrefix,

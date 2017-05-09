@@ -1,11 +1,11 @@
 package io.voklim.mon.monitor.base.impl
 
-import io.voklim.mon.config.CloudwatchConf
-import io.voklim.mon.common._
+import io.voklim.config.CloudwatchConf
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient
 import com.amazonaws.services.cloudwatch.model.{MetricDatum, PutMetricDataRequest}
 import io.voklim.mon.monitor.base.Monitor
 import monix.eval.Task
+import io.voklim.common._
 
 import scala.util.{Failure, Success}
 

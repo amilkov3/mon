@@ -1,4 +1,5 @@
-import Dependencies._
+
+name := "mon"
 
 lazy val scalaCheckVersion = "3.0.1"
 
@@ -9,7 +10,6 @@ lazy val mon = (project in file(".")).
       scalaVersion := "2.12.1",
       version      := "0.1.0"
     )),
-    name := "mon",
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats" % "0.9.0",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",

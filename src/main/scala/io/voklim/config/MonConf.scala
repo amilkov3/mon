@@ -1,4 +1,4 @@
-package io.voklim.mon.config
+package io.voklim.config
 
 import scala.concurrent.duration.FiniteDuration
 

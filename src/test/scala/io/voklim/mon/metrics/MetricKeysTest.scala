@@ -1,6 +1,6 @@
 package io.voklim.mon.metrics
 
-import io.voklim.mon.test._
+import io.voklim.test._
 
 class MetricKeysTest extends UnitPropertySpec {
 

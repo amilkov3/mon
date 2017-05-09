@@ -10,10 +10,10 @@ trait MonExports {
   type TimerMonitorWatcher =  io.voklim.mon.monitor.buffered.watcher.impl.TimerMonitorWatcher
   type HashMapManager = io.voklim.mon.monitor.buffered.manager.impl.HashMapManager
 
-  type CloudwatchConf = io.voklim.mon.config.CloudwatchConf
-  type QueuedCloudwatchConf = io.voklim.mon.config.QueuedCloudwatchConf
-  type BufferedMonitorConf = io.voklim.mon.config.BufferedMonitorConf
-  type MonitorWatcherConf = io.voklim.mon.config.MonitorWatcherConf
+  type CloudwatchConf = io.voklim.config.CloudwatchConf
+  type QueuedCloudwatchConf = io.voklim.config.QueuedCloudwatchConf
+  type BufferedMonitorConf = io.voklim.config.BufferedMonitorConf
+  type MonitorWatcherConf = io.voklim.config.MonitorWatcherConf
 
   type MetricPrefix = io.voklim.mon.metrics.MetricPrefix
   type MetricDomain = io.voklim.mon.metrics.MetricDomain

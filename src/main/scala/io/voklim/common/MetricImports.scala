@@ -1,4 +1,4 @@
-package io.voklim.mon.common
+package io.voklim.common
 
 import io.voklim.mon.metrics.MetricKey
 

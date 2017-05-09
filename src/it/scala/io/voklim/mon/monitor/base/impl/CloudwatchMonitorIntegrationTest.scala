@@ -1,16 +1,14 @@
-package io.voklim.mon
+package io.voklim.mon.monitor.base.impl
 
-import java.time.ZoneId
+import java.time.{LocalDate, ZoneId}
 import java.util.Date
-import java.time.LocalDate
 
 import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest
-import io.voklim.mon.config.CloudwatchConf
+import io.voklim.mon.CloudwatchConf
 import io.voklim.mon.it._
-import io.voklim.mon.monitor.base.impl.CloudwatchClient
 
-import scala.concurrent.duration._
 import scala.collection.JavaConverters._
+import scala.concurrent.duration._
 
 /** Attempts to send a metric name and corresponding value to AWS and subsequently
   * read a sum aggregate of that metric over a period of time, ensuring that

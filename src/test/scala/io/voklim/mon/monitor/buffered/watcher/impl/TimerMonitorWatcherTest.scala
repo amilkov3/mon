@@ -1,7 +1,7 @@
 package io.voklim.mon.monitor.buffered.watcher.impl
 
 import io.voklim.mon.monitor.buffered.manager.impl.HashMapManager
-import io.voklim.mon.test._
+import io.voklim.test._
 
 import scala.concurrent.duration._
 

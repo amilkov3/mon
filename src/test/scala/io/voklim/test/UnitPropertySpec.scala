@@ -1,4 +1,4 @@
-package io.voklim.mon.test
+package io.voklim.test
 
 import org.scalatest.{Matchers, PropSpec}
 import org.scalatest.prop.PropertyChecks

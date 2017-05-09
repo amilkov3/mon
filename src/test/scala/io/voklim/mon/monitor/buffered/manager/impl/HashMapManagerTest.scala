@@ -2,7 +2,7 @@ package io.voklim.mon.monitor.buffered.manager.impl
 
 import org.scalatest.BeforeAndAfterEach
 
-import io.voklim.mon.test._
+import io.voklim.test._
 
 class HashMapManagerTest extends {}
   with UnitPropertySpec

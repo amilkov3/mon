@@ -1,8 +1,8 @@
 package io.voklim.mon.monitor.buffered
 
 import scala.collection.JavaConverters._
-import io.voklim.mon.common._
-import io.voklim.mon.config.BufferedMonitorConf
+import io.voklim.config.BufferedMonitorConf
+import io.voklim.common._
 
 /** Abstract buffered monitor that accumulates metrics in a
   * concurrent queue */
