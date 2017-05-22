@@ -5,7 +5,7 @@ import java.util.{Timer, TimerTask}
 import io.voklim.config.MonitorWatcherConf
 import io.voklim.mon.monitor.buffered.manager.MonitorManager
 import io.voklim.mon.monitor.buffered.watcher.MonitorWatcher
-import io.voklim.common._
+import io.voklim.internal.common._
 
 /** Sends metrics via [[MonitorManager]] in
   * a seperate thread at a configured interval */

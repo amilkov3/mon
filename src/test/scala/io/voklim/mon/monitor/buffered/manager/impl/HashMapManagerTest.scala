@@ -26,7 +26,9 @@ class HashMapManagerTest extends {}
 
   property("should flush queued by configured quantity") {
     val vector = dummyQueuedMonitor.iterNextChunk()
-    vector.length should be(testConf.flushMetricsCount)
+    /** Plus one because we are also sending the number of metrics
+      *  remaining in the queue as a metric itself */
+    vector.length should be(testConf.flushMetricsCount + 1)
   }
 
   /** Reset queued monitor after each test */

@@ -1,4 +1,4 @@
-package io.voklim.common
+package io.voklim.internal.common
 
 import monix.execution.Scheduler
 

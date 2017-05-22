@@ -1,4 +1,4 @@
-package io.voklim.common
+package io.voklim.internal.common
 
 trait ExtensionImports {
   implicit def richOption[A](repr: Option[A]): RichOption[A] = new RichOption[A](repr)

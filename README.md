@@ -30,14 +30,23 @@ val ccConf = new CloudwatchConf {
 // And your client
 val cc = new CloudwatchClient(ccConf)
 // You can call send directly which will async send whatever metrics you provide
-cc.send((metricKey, 1.00), (metricKey. 1.50))
+cc.send((metricKey, 1.00), (metricKey, 1.50))
 
 
 //To use the manager watcher pattern do a:
 
 import scala.concurrent.duration._
 
-val mm = new HashMapManager(cc)
+val qcConf = new QueuedCloudwatchConf{
+	override val flushMetricsCount: Int = 50
+	override val namespace: String = "mon"
+	override def sendBufferSize: Boolean = true
+	override def bufferSizeMetricName: Option[MetricKey] = None
+}
+
+val qc = new QueuedCloudwatchClient(qcConf)
+
+val mm = new HashMapManager(qc)
 
 val mwConf = new MonitorWatcherConf {
   override val sendMetricsInterval = 2.minutes

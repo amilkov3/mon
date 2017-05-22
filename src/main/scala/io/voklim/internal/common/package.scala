@@ -1,4 +1,4 @@
-package io.voklim
+package io.voklim.internal
 
 package object common extends {}
   with ExecutionImports

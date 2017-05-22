@@ -3,7 +3,7 @@ package io.voklim.mon.monitor.buffered.manager.impl
 import io.voklim.mon.monitor.buffered.BufferedMonitor
 import io.voklim.mon.monitor.buffered.manager.MonitorManager
 import io.voklim.mon.metrics.MetricKey
-import io.voklim.common._
+import io.voklim.internal.common._
 
 /** Monitor manager that stores metric state in an intermediate hashmap
   * (since certain metrics can be configured to be zeroed out or not every time

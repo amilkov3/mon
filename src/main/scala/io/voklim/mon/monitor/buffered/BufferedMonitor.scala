@@ -1,7 +1,7 @@
 package io.voklim.mon.monitor.buffered
 
 import io.voklim.mon.monitor.base.Monitor
-import io.voklim.common._
+import io.voklim.internal.common._
 
 /** Trait for monitor which accumulates metrics in memory before sending them */
 trait BufferedMonitor extends Monitor {

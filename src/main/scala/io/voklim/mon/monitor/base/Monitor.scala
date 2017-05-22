@@ -1,6 +1,6 @@
 package io.voklim.mon.monitor.base
 
-import io.voklim.common._
+import io.voklim.internal.common._
 
 /** Reports application metrics. */
 trait Monitor {
