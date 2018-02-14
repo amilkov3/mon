@@ -1,4 +1,4 @@
-package ml.milkov.mon.metrics
+package ml.milkov.mon.metrickey
 
 import ml.milkov.test._
 

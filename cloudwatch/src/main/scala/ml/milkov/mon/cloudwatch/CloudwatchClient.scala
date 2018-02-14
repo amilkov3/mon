@@ -2,28 +2,26 @@ package ml.milkov.mon.cloudwatch
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient
 import com.amazonaws.services.cloudwatch.model.{MetricDatum, PutMetricDataRequest}
-import ml.milkov.config.CloudwatchConf
+import ml.milkov.mon.config.CloudwatchConf
 import ml.milkov.internal.common._
 import ml.milkov.mon.base.Monitor
-import monix.eval.Task
+import ml.milkov.mon.metrickey.MetricK
 
-import scala.util.{Failure, Success}
-
-class CloudwatchClient[F[_]: Effect](conf: CloudwatchConf) extends Monitor[F] with Logging {
+/** Effect abstracted wrapper around Java client */
+class CloudwatchClient[F[_]: Effect, A <: MetricK: Show](
+  conf: CloudwatchConf
+) extends Monitor[F, A] with Logging {
 
   val client = new AmazonCloudWatchClient()
 
-  private implicit val scheduler = defaultScheduler
-
-  /** Async sends a series of metrics */
-  override def send(metric: Metric, metrics: Metric*): F[Unit] = {
+  override def send(metrics: Metric[A]*): F[Unit] = {
     val r = new PutMetricDataRequest()
     val mdL = new java.util.ArrayList[MetricDatum]()
-    val metricSeq = (metric +: metrics)
-    logger.info(s"Sending ${metricSeq.length} metrics to Cloudwatch")
-    metricSeq.foreach { case (n, v) =>
+    logger.info(s"Sending ${metrics.length} metrics to Cloudwatch")
+    metrics.foreach { case (n, t, v) =>
       val md = new MetricDatum()
-      md.setMetricName(n.toKeyString)
+      md.setMetricName(Show[A].show(n))
+      md.setTimestamp(Timestamplike[java.util.Date].fromTimestamp(t))
       md.setValue(v)
       mdL.add(md)
     }
@@ -31,17 +29,6 @@ class CloudwatchClient[F[_]: Effect](conf: CloudwatchConf) extends Monitor[F] wi
     r.setMetricData(mdL)
     r.setNamespace(conf.namespace)
 
-    /*Effect[F].async[Unit]{cb =>
-      Task(client.putMetricData(r)).runAsync.onComplete[Unit]{
-        case Failure(f) => cb(Left(f))
-        case _ => cb(Right(()))
-      }
-    }*/
-
     Effect[F].delay(client.putMetricData(r))
   }
-    /*.runAsync.onComplete[Unit]{
-    case Failure(err) => logger.error(s"Sending metric(s) failed with: $err")
-    case Success(_) => ()
-  }*/
 }

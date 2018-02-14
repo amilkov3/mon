@@ -1,19 +1,19 @@
-package ml.milkov.config
+package ml.milkov.mon.config
 
-import ml.milkov.mon.metrics.MetricKey
+import ml.milkov.internal.common._
 
 import scala.concurrent.duration.FiniteDuration
 
-trait BufferedMonitorConf {
+abstract class MetricBufferConf[A <: MetricK: Show] {
   def flushMetricsCount: Int
-  /** If true, every time metrics are flushed, the count of
+
+  /** If non-empty, every time metrics are flushed, the count of
     * the remaining metrics in the buffered monitor will be
     * sent as a metric. This will allow you to adjust
     * [[MonitorWatcherConf.sendMetricsInterval]]
     * or [[flushMetricsCount]] accordingly
     *  */
-  def sendBufferSize: Boolean
-  def bufferSizeMetricName: Option[MetricKey]
+  def bufferSizeMetricName: Option[A]
 }
 
 trait MonitorWatcherConf {

@@ -7,53 +7,99 @@ Supported clients:
 * AWS Cloudwatch
 
 Supported metric architectures:
-* A queue you can push metrics to along with an associated hash map manager that is responsible for flushing a configurable quantity of metrics from the queue, updating the state of said metrics in an intermediate map (useful for cumulative metrics), and sending the metrics via a given client. A monitor watcher (implemented via a simple Java TimerTask) is responsible for periodically invoking the manager to coordinate the above steps
+* When you send metrics they are placed in an in-memory concurrent queue. 
+A watcher (`java.util.Timer` task) sends a configured quantity of metrics to the upstream service 
+at a configured interval. This is facilitated by a hash map manager, which drains the queue and 
+places the metrics in an intermediate hashmap which is necessary in order to track aggregate 
+metrics (more about this below). All of this happens on a single long running thread (the timer 
+task) so there are no race conditions 
+
+Say you send the following metrics:
+
+```
+("ametric", aggregate=false, timestamp1, 1.0), ("ametric", aggregate=false, timestamp2, 2.0),
+("bmetric", aggregate=true, timestamp3, 1.0), (("bmetric", aggregate=true, timestamp4, 2.0),
+("bmetric", aggregate=true, timestamp5, -1.0)
+```
+
+These will go in the hashmap as:
+
+```
+"ametric" -> [(timestamp1, 1.0), (timestamp2, 2.0)]
+"bmetric" -> [(timestamp3, 1.0), (timestamp4, 3.0), (timestamp5, 2.0)]
+```
+
+And will be subsequently sent upstream as such
 
 ### Usage
 
+Every metric key must extend `ml.milkov.mon.metrickey.MetricK` and have
+an instance of `cats.Show`. There is a default key type: `ml.milkov.mon.metrickey.MetricKey`
+if you want to just use that. It should be more than sufficient for most use cases
+
+Here's how to instantiate a watcher and start sending metrics:
+
 ```scala
 
-import io.voklim.mon._
+import ml.milkov.mon._
 
-// Create a name for your metric
+/** instantiate a metric */
 val metricKey = MetricKey.createKey(
-  new MetricPrefix("testPrefix"),
-  new MetricDomain("testDomain"),
-  new MetricName("testName")
+  MetricPrefix.tag("testPrefix"),
+  MetricDomain.tag("testDomain"),
+  MetricName.tag("testName", aggregate = true)
 )
 
-// A Cloudwatch conf
-val ccConf = new CloudwatchConf {
+/** your Cloudwatch conf */
+val cwConf = new CloudwatchConf {
   override val namespace = "myNamespace"
 }
 
-// And your client
-val cc = new CloudwatchClient(ccConf)
-// You can call send directly which will async send whatever metrics you provide
-cc.send((metricKey, 1.00), (metricKey, 1.50))
+import cats.effect.IO
+
+/** You can use just the client wrapper */
+val cc = new CloudwatchClient[IO, MetricKey](cwConf)
+
+/** You can call send directly which will send whatever metrics you provide sync or async
+(depending on how you run the `cats.effect.Effect` instance) */
+cc.send(
+  (metricKey, Timestamp.now(), 1.0),
+  (metricKey, Timestamp.now(), 2.0)
+).unsafeRunSync()
 
 
-//To use the manager watcher pattern do a:
+//To use the full architecture
 
 import scala.concurrent.duration._
 
-val qcConf = new QueuedCloudwatchConf{
-	override val flushMetricsCount: Int = 50
-	override val namespace: String = "mon"
-	override def sendBufferSize: Boolean = true
-	override def bufferSizeMetricName: Option[MetricKey] = None
+val buffConf = new MetricBufferConf[MetricKey]{
+  override val flushMetricsCount: Int = 50
+  override def bufferSizeMetricName: Option[MetricKey] = None
 }
-
-val qc = new QueuedCloudwatchClient(qcConf)
-
-val mm = new HashMapManager(qc)
 
 val mwConf = new MonitorWatcherConf {
   override val sendMetricsInterval = 2.minutes
 }
 
-val mw = new TimerMonitorWatcher(mm, mwConf)
-mw.run()
+/** spin up architecture (`client` here is simply a convenience
+* if you want to make raw metrics pushes)
+ *  */
+val (monitorWatcher, client, buffer) = CloudwatchTimerWatcher[IO, MetricKey](
+  mwConf,
+  buffConf,
+  cwConf,
+  Async // execution style for sending the metrics upstream, either Sync or Async
+)
+
+/** start the watcher */
+monitorWatcher.run()
+
+/** push metrics to the queue which will eventually
+* be sent upstream to your metrics service by the watcher */
+buffer.push(
+  (metricKey, Timestamp.now(), 1.0),
+  (metricKey, Timestamp.now(), 2.0)
+)
 
 ```
 

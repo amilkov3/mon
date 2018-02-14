@@ -1,7 +1,7 @@
 
 name := "mon"
 
-lazy val scalaV = "2.12.2"
+lazy val scalaV = "2.12.4"
 lazy val scalaCheckVersion = "3.0.1"
 
 scalaVersion in Global := scalaV
@@ -35,12 +35,14 @@ lazy val commonSettings = Seq(
 )
 
 lazy val commonDeps = Seq(
-  "io.monix" %% "monix-reactive" % "3.0.0-M3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
+  "io.estatico" %% "newtype" % "0.1.0",
   "org.typelevel" %% "cats-core" % "1.0.1",
   "org.typelevel" %% "cats-effect" % "0.8",
+  "org.typelevel" %% "mouse" % "0.16",
 
-  "org.scalatest" %% "scalatest" % scalaCheckVersion % "test"
+  "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
 scalacOptions in Global ++= Seq(

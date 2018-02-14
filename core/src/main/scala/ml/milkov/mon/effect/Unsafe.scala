@@ -1,8 +1,7 @@
-package ml.milkov.internal.common.effect
+package ml.milkov.mon.effect
 
 import cats.syntax.either._
-import ml.milkov.internal.common.{IO, Task}
-import monix.execution.Scheduler
+import ml.milkov.internal.common.IO
 
 trait Unsafe[F[_]] {
   /** Run an effect synchronously */
@@ -19,11 +18,6 @@ object Unsafe {
   implicit val unsafeIO: Unsafe[IO] = new Unsafe[IO] {
     override def unsafePerformSync[A](fa: IO[A]): A = fa.unsafeRunSync()
   }
-
-  implicit def unsafeTask(implicit sched: Scheduler): Unsafe[Task] = new Unsafe[Task] {
-    override def unsafePerformSync[A](fa: Task[A]) : A = fa.coeval.value.right.get
-  }
-
 
 }
 

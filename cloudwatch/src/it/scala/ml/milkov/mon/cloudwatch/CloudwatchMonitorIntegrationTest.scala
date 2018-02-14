@@ -1,9 +1,9 @@
 package ml.milkov.mon.cloudwatch
 
 import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest
-import ml.milkov.config.CloudwatchConf
-import ml.milkov.mon.cloudwatch.CloudwatchClient
+import ml.milkov.mon.config.CloudwatchConf
 import ml.milkov.it._
+import ml.milkov.internal.common._
 import java.time.{LocalDate, ZoneId}
 import java.util.Date
 
@@ -20,13 +20,13 @@ class CloudwatchMonitorIntegrationTest extends ITPropertySpec{
   property("should increment test metric"){
 
     /** Create extended client that can read and write to CloudWatch */
-    val client =  new DummyCloudWatchClient(testConf)
+    val client =  new DummyCloudWatchClient(itConf)
 
     /** Read the sum of the existing datapoints for this metric */
     val startLen = client.readMetric(metricTestKey.toKeyString)
 
     /** Increment the metric via an async write. */
-    client.send((metricTestKey , 1))
+    client.send((metricTestKey, Timestamp.now(), 1))
 
     /** Ensure async send has enough time to reach AWS by polling reads every
       * 500 milliseconds with a 3 second timeout */
@@ -38,7 +38,9 @@ class CloudwatchMonitorIntegrationTest extends ITPropertySpec{
   }
 }
 
-class DummyCloudWatchClient(conf: CloudwatchConf) extends CloudwatchClient(conf){
+class DummyCloudWatchClient(
+  conf: CloudwatchConf
+) extends CloudwatchClient[Id, MetricKey](conf){
 
   def readMetric(metricName: String) = {
 

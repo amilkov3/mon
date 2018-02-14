@@ -1,13 +1,13 @@
 package ml.milkov.test
 
-import ml.milkov.config.BufferedMonitorConf
-import ml.milkov.mon.buffered.AbstractQueuedMonitor
+import ml.milkov.mon.config.MetricBufferConf
 import ml.milkov.internal.common._
+import ml.milkov.mon.metrickey.MetricK
 
-class DummyQueuedMonitorImpl(conf: BufferedMonitorConf) extends AbstractQueuedMonitor[Id](conf) {
-  override def send(metric: Metric, metrics: Metric*): Unit = {
-    (metric +: metrics).foreach { case (k, v) =>
-      println(s"Sending metric with key -> ${k.toKeyString} and value: $v")
+/*class DummyQueuedMonitorImpl(conf: MetricBufferConf[MetricKey]) extends AbstractQueuedMonitor[Id, MetricKey](conf) {
+  override def send(metrics: Metric[MetricKey]*): Unit = {
+    metrics.foreach { case (k, t, v) =>
+      println(s"Sending metric with key -> ${k.show} and value: $v")
     }
   }
-}
+}*/
