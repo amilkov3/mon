@@ -59,7 +59,7 @@ object MetricDomain extends NewType.Default[String]{
 /** Tagged type representing a domain i.e. "activeActors"
   * `aggregate` denotes whether metric should be cumulative */
 object MetricName extends NewType.Default[(String, Boolean)]{
-  def tag(s: String, aggregate: Boolean = true) = wrap((s, aggregate))
+  def tag(s: String, aggregate: Boolean = false) = wrap((s, aggregate))
 
   implicit final class Ops(val repr: Type) extends AnyVal {
     def aggregate: Boolean = unwrap(repr)._2

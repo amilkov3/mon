@@ -1,39 +1,45 @@
 package ml.milkov.mon.buffered.manager.impl
 
 import org.scalatest.BeforeAndAfterEach
-
 import ml.milkov.test._
 import ml.milkov.internal.common._
+import ml.milkov.mon.buffered.QueueMetricBuffer
 
-/*class HashMapManagerTest extends {}
+class HashMapManagerTest extends {}
   with UnitPropertySpec
   with BeforeAndAfterEach
 {
 
-  var dummyQueuedMonitor = new DummyQueuedMonitorImpl(testConf)
+  var qmb = new QueueMetricBuffer[MetricKey](testConf)
 
   /** Populate monitor queue before each test */
   override def beforeEach(): Unit = {
-    populatedQueue(dummyQueuedMonitor)
+    populatedQueue(qmb)
   }
 
-  property("hash map manager should managed queued buffer appropriately") {
+  property(
+    "`sendChunk` should clear map value for test key and keep one agg value for agg key"
+  ) {
 
-    val hashMapManager = new HashMapManager[Id, MetricKey](dummyQueuedMonitor)
+    val hashMapManager = new HashMapManager[Id, MetricKey](
+      qmb,
+      new DummyMonitor
+    )
+
     hashMapManager.sendChunk()
 
-    hashMapManager.getMapSnapshot().values.foreach{_ should be(0D)}
+    hashMapManager.getMapSnapshot()(metricTestKey).length shouldBe 0
+    hashMapManager.getMapSnapshot()(aggTestKey).head._2 shouldBe
+      (testConf.flushMetricsCount / 2).toDouble
   }
 
   property("should flush queued by configured quantity") {
-    val vector = dummyQueuedMonitor.iterNextChunk()
-    /** Plus one because we are also sending the number of metrics
-      *  remaining in the queue as a metric itself */
-    vector.length should be(testConf.flushMetricsCount + 1)
+    val vector = qmb.iterNextChunk()
+    vector.length should be(testConf.flushMetricsCount)
   }
 
   /** Reset queued monitor after each test */
   override def afterEach(): Unit = {
-    dummyQueuedMonitor = new DummyQueuedMonitorImpl(testConf)
+    qmb = new QueueMetricBuffer[MetricKey](testConf)
   }
-}*/
+}

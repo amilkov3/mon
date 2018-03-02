@@ -70,9 +70,6 @@ class DummyCloudWatchClient(
     g.setMetricName(metricName)
 
     val resp = client.getMetricStatistics(g)
-    resp.getDatapoints().asScala.toList.headOption  match {
-      case Some(d) => d.getSum().toInt
-      case None => 0
-    }
+    resp.getDatapoints().asScala.toList.headOption.cata(_.getSum().toInt, 0)
   }
 }

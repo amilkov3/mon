@@ -1,22 +1,21 @@
+import ReleaseTransformations._
 
 name := "mon"
 
+organization in ThisBuild := "ml.milkov"
+
 lazy val scalaV = "2.12.4"
-lazy val scalaCheckVersion = "3.0.1"
 
 scalaVersion in Global := scalaV
 
-lazy val core = (project in file("core"))
-  .settings(commonSettings: _*)
+lazy val core = project.in(file("core"))
+  .settings(noPublishSettings)
   .settings(
     libraryDependencies ++= commonDeps
   )
-    /*.configs(Test)
-    .settings(Defaults.testSettings: _*)*/
 
-
-lazy val cloudwatch = (project in file("cloudwatch"))
-  .settings(commonSettings: _*)
+lazy val cloudwatch = project.in(file("cloudwatch"))
+  .settings(releasePublishSettings)
   .settings(
     libraryDependencies ++= commonDeps,
     libraryDependencies ++= Seq(
@@ -25,14 +24,7 @@ lazy val cloudwatch = (project in file("cloudwatch"))
   )
   .configs(IntegrationTest.extend(Test))
   .settings(Defaults.itSettings: _*)
-  /*.settings(Defaults.testSettings: _*)*/
-  .dependsOn(core)
-
-lazy val commonSettings = Seq(
-  organization := "ml.milkov",
-  scalaVersion := scalaV,
-  version      := "0.1.0"
-)
+  .dependsOn(core % "compile->compile;test->test")
 
 lazy val commonDeps = Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
@@ -53,3 +45,61 @@ scalacOptions in Global ++= Seq(
   "-language:higherKinds",
   "-language:implicitConversions"
 )
+
+lazy val noPublishSettings = Seq(
+  publish := (),
+  publishLocal := (),
+  publishArtifact := false
+)
+
+lazy val releasePublishSettings = Seq(
+  releaseCrossBuild := true,
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    publishArtifacts,
+    setNextVersion,
+    commitNextVersion,
+    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+    pushChanges
+  ),
+  homepage := Some(url("https://github.com/amilkov3/mon")),
+  licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  publishMavenStyle := true,
+  publishArtifact in Test := false,
+  pomIncludeRepository := { _ => false },
+  publishTo := {
+    val nexus = "https://oss.sonatype.org/"
+    if (isSnapshot.value)
+      Some("snapshots" at nexus + "content/repositories/snapshots")
+    else
+      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+  },
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/amilkov3/mon"),
+      "https://github.com/amilkov3/mon.git"
+    )
+  ),
+  developers := List(
+    Developer("amilkov3",  "Alex Milkov", "amilkov3@gmail.com", url("http://milkov.ml"))
+  ),
+  credentials ++= (
+    for {
+      username <- Option(System.getenv().get("SONATYPE_USERNAME"))
+      password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
+    } yield Credentials(
+      "Sonatype Nexus Repository Manager",
+      "oss.sonatype.org",
+      username,
+      password
+    )
+    ).toSeq
+)
+

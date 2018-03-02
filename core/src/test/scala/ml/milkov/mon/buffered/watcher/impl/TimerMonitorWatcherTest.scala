@@ -3,21 +3,30 @@ package ml.milkov.mon.buffered.watcher.impl
 import ml.milkov.mon.buffered.manager.impl.HashMapManager
 import ml.milkov.test._
 import ml.milkov.internal.common._
+import ml.milkov.mon.buffered.QueueMetricBuffer
+import ml.milkov.mon.buffered.watcher.execution.Sync
 
 import scala.concurrent.duration._
 
 /** Test to verify Java task MonitorWatcher is integrating soundly with MonitorManager */
-/*class TimerMonitorWatcherTest extends UnitPropertySpec {
+class TimerMonitorWatcherTest extends UnitPropertySpec {
 
   property("monitor watcher should should run in background in conjunction with monitor manager") {
 
-    val dummyQueuedMonitor = new DummyQueuedMonitorImpl(testConf)
-    val hashMapManager = new HashMapManager[Id, MetricKey](dummyQueuedMonitor)
+    val qmb = new QueueMetricBuffer[MetricKey](testConf)
+    val hmm = new HashMapManager[Id, MetricKey](
+      qmb,
+      new DummyMonitor
+    )
 
-    val monitorWatcher = new TimerMonitorWatcher[Id](hashMapManager, testConf, Sync)
+    val monitorWatcher = new TimerMonitorWatcher[Id](
+      hmm,
+      testConf,
+      Sync
+    )
 
     /** Populate queue in queued monitor */
-    populatedQueue(dummyQueuedMonitor)
+    populatedQueue(qmb)
 
     /** Start monitor watcher */
     monitorWatcher.run()
@@ -27,7 +36,8 @@ import scala.concurrent.duration._
       testConf.sendMetricsInterval,
       testConf.sendMetricsInterval + 3.seconds
     ) {
-      hashMapManager.getMapSnapshot().values.foreach{_ should be(0D)}
+      hmm.getMapSnapshot()(metricTestKey).length shouldBe 0
+      hmm.getMapSnapshot()(aggTestKey).length shouldBe 1
     }
   }
-}*/
+}

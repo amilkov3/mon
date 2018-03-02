@@ -20,15 +20,25 @@ trait MonTestImports {
     override val bufferSizeMetricName: Option[MetricKey] = None
   }
 
+  private val pre = MetricPrefix.tag("testPrefix")
+  private val dom = MetricDomain.tag("testDomain")
+
   val metricTestKey = MetricKey.createKey(
-    MetricPrefix.tag("testPrefix"),
-    MetricDomain.tag("testDomain"),
+    pre,
+    dom,
     MetricName.tag("testName")
   )
 
+  val aggTestKey = MetricKey.createKey(
+    pre,
+    dom,
+    MetricName.tag("aggTestName", true)
+  )
+
   def populatedQueue(buff: QueueMetricBuffer[MetricKey]) = {
-    1.to(testConf.flushMetricsCount).foreach { _ =>
+    0.until(testConf.flushMetricsCount / 2).foreach { _ =>
       buff.push((metricTestKey, Timestamp.now(), 1))
+      buff.push((aggTestKey, Timestamp.now(), 1))
     }
   }
 }

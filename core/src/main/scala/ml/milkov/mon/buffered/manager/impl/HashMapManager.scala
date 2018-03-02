@@ -61,5 +61,6 @@ private[milkov] final class HashMapManager[F[_]: Effect, A <: metrickey.MetricK:
   }
 
   /** For testing */
-  private[buffered] def getMapSnapshot(): Map[A, ListBuffer[(Timestamp, Double)]] = metricMap.toMap
+  private[buffered] def getMapSnapshot(): Map[A, ListBuffer[(Timestamp, Double)]] =
+    metricMap.toMap
 }
