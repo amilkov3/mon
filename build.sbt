@@ -1,14 +1,8 @@
 import ReleaseTransformations._
 
-name := "mon"
-
 organization in ThisBuild := "ml.milkov"
 
-lazy val scalaV = "2.12.4"
-
-scalaVersion in Global := scalaV
-
-lazy val core = project.in(file("core"))
+lazy val root = project.in(file("."))
   .settings(noPublishSettings)
   .settings(
     libraryDependencies ++= commonDeps
@@ -16,6 +10,7 @@ lazy val core = project.in(file("core"))
 
 lazy val cloudwatch = project.in(file("cloudwatch"))
   .settings(releasePublishSettings)
+  .settings(name := "mon-cloudwatch")
   .settings(
     libraryDependencies ++= commonDeps,
     libraryDependencies ++= Seq(
@@ -24,7 +19,7 @@ lazy val cloudwatch = project.in(file("cloudwatch"))
   )
   .configs(IntegrationTest.extend(Test))
   .settings(Defaults.itSettings: _*)
-  .dependsOn(core % "compile->compile;test->test")
+  .dependsOn(root % "compile->compile;test->test")
 
 lazy val commonDeps = Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
@@ -74,6 +69,7 @@ lazy val releasePublishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
+  sonatypeProfileName := "ml.milkov",
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     if (isSnapshot.value)
@@ -89,17 +85,6 @@ lazy val releasePublishSettings = Seq(
   ),
   developers := List(
     Developer("amilkov3",  "Alex Milkov", "amilkov3@gmail.com", url("http://milkov.ml"))
-  ),
-  credentials ++= (
-    for {
-      username <- Option(System.getenv().get("SONATYPE_USERNAME"))
-      password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
-    } yield Credentials(
-      "Sonatype Nexus Repository Manager",
-      "oss.sonatype.org",
-      username,
-      password
-    )
-    ).toSeq
+  )
 )
 
