@@ -3,6 +3,8 @@
 
 [![Build status](https://img.shields.io/travis/amilkov3/mon/master.svg)](https://travis-ci.org/amilkov3/mon)
 
+![alt](mon.jpg)
+
 Metrics management and associated metric client implementations
 
 Supported clients:
