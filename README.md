@@ -2,6 +2,7 @@
 ## Mon
 
 [![Build status](https://img.shields.io/travis/amilkov3/mon/master.svg)](https://travis-ci.org/amilkov3/mon)
+[![codecov](https://codecov.io/gh/amilkov3/mon/branch/master/graph/badge.svg)](https://codecov.io/gh/amilkov3/mon)
 
 ![alt](mon.jpg)
 

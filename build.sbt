@@ -2,12 +2,14 @@ import ReleaseTransformations._
 
 organization in ThisBuild := "ml.milkov"
 
+coverageEnabled in ThisBuild := true
+
 lazy val root = project.in(file("."))
   .settings(noPublishSettings: _*)
   .aggregate(cloudwatch, core)
 
 lazy val core = project.in(file("core"))
-  .settings(releasePublishSettings)
+  .settings(releasePublishSettings: _*)
   .settings(name := "mon-core")
   .settings(
     libraryDependencies ++= commonDeps
