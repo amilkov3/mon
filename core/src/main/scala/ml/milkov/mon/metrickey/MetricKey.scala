@@ -1,7 +1,6 @@
 package ml.milkov.mon.metrickey
 
 import ml.milkov.internal.common._
-import ml.milkov.mon.base.Monitor
 
 /** Default implementation of [[MetricK]] if user wants to just use
   * this out of the box */
@@ -24,7 +23,8 @@ sealed abstract case class MetricKey(
 
   override val aggregate: Boolean = metricName.aggregate
 }
-/** Produces the appropriate metric names for a [[Monitor]]. */
+/** Produces the appropriate metric names for a
+  * [[ml.milkov.mon.base.Monitor]]. */
 object MetricKey {
 
   /** Key may have suffix parts such as geocode and units */
