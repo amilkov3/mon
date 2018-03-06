@@ -3,13 +3,18 @@ import ReleaseTransformations._
 organization in ThisBuild := "ml.milkov"
 
 lazy val root = project.in(file("."))
-  .settings(noPublishSettings)
+  .settings(noPublishSettings: _*)
+  .aggregate(cloudwatch, core)
+
+lazy val core = project.in(file("core"))
+  .settings(releasePublishSettings)
+  .settings(name := "mon-core")
   .settings(
     libraryDependencies ++= commonDeps
   )
 
 lazy val cloudwatch = project.in(file("cloudwatch"))
-  .settings(releasePublishSettings)
+  .settings(releasePublishSettings: _*)
   .settings(name := "mon-cloudwatch")
   .settings(
     libraryDependencies ++= commonDeps,
@@ -19,7 +24,7 @@ lazy val cloudwatch = project.in(file("cloudwatch"))
   )
   .configs(IntegrationTest.extend(Test))
   .settings(Defaults.itSettings: _*)
-  .dependsOn(root % "compile->compile;test->test")
+  .dependsOn(core % "compile->compile;test->test")
 
 lazy val commonDeps = Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
