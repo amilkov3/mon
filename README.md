@@ -11,6 +11,7 @@ Metrics management and associated metric client implementations
 
 Supported clients:
 * AWS Cloudwatch
+For credential configuration instructions click [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) (I recommend you download the AWS CLI and then let it generate the necessary config files via `aws configure`
 
 Supported metric architectures:
 * When you send metrics they are placed in an in-memory concurrent queue. 
