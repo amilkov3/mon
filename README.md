@@ -3,6 +3,7 @@
 
 [![Build status](https://img.shields.io/travis/amilkov3/mon/master.svg)](https://travis-ci.org/amilkov3/mon)
 [![codecov](https://codecov.io/gh/amilkov3/mon/branch/master/graph/badge.svg)](https://codecov.io/gh/amilkov3/mon)
+![Maven metadata URI](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/ml/milkov/mon-cloudwatch_2.12/maven-metadata.xml.svg)
 
 ![alt](mon.jpg)
 
