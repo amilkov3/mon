@@ -10,8 +10,10 @@
 Metrics management and associated metric client implementations
 
 Supported clients:
-* AWS Cloudwatch
-For credential configuration instructions click [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) (I recommend you download the AWS CLI and then let it generate the necessary config files via `aws configure`
+* AWS Cloudwatch. For credential configuration instructions click
+ [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) 
+ (I recommend you download the AWS CLI and then let it generate the necessary config files
+  via `aws configure`)
 
 Supported metric architectures:
 * When you send metrics they are placed in an in-memory concurrent queue. 
@@ -40,15 +42,15 @@ And will be subsequently sent upstream as such
 
 ### Usage
 
-Every metric key must extend `ml.milkov.mon.metrickey.MetricK` and have
-an instance of `cats.Show`. There is a default key type: `ml.milkov.mon.metrickey.MetricKey`
+Every metric key must extend `mon.metrickey.MetricK` and have
+an instance of `cats.Show`. There is a default key type: `mon.metrickey.MetricKey`
 if you want to just use that. It should be more than sufficient for most use cases
 
 Here's how to instantiate a watcher and start sending metrics:
 
 ```scala
 
-import ml.milkov.mon._
+import mon._
 
 /** instantiate a metric */
 val metricKey = MetricKey.createKey(
@@ -56,6 +58,8 @@ val metricKey = MetricKey.createKey(
   MetricDomain.tag("testDomain"),
   MetricName.tag("testName", aggregate = true)
 )
+
+import mon.cloudwatch._
 
 /** your Cloudwatch conf */
 val cwConf = new CloudwatchConf {
