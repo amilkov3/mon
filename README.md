@@ -15,6 +15,10 @@ Supported clients:
  (I recommend you download the AWS CLI and then let it generate the necessary config files
   via `aws configure`)
 
+```scala
+"ml.milkov" %% "mon-cloudwatch" % "0.2.0"
+```
+
 Supported metric architectures:
 * When you send metrics they are placed in an in-memory concurrent queue. 
 A watcher (`java.util.Timer` task) sends a configured quantity of metrics to the upstream service 
