@@ -9,7 +9,7 @@ import mon.buffered.manager.MonitorManager
 import mon.internal.common._
 import mon.buffered.watcher.execution._
 
-/** Sends metrics via [[MonitorManager]] in
+/** Sends metrics via [[mon.buffered.manager.MonitorManager]] in
   * a seperate thread at a configured interval */
 final class TimerMonitorWatcher[F[_]: Effect: Unsafe](
   monitorManager: MonitorManager[F],
