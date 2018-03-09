@@ -1,8 +1,7 @@
 package mon.buffered.watcher
 
-import mon.buffered.manager.MonitorManager
-
-/** Watcher is responsible for running implementations of [[MonitorManager]] */
+/** Watcher is responsible for running implementations of
+  * [[mon.buffered.manager.MonitorManager[MonitorManager]] */
 trait MonitorWatcher {
   def run(): Unit
   def stop(): Unit
