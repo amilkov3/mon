@@ -29,14 +29,14 @@ lazy val cloudwatch = project.in(file("cloudwatch"))
   .dependsOn(core % "compile->compile;test->test")
 
 lazy val commonDeps = Seq(
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
-  "io.estatico" %% "newtype" % "0.1.0",
-  "org.typelevel" %% "cats-core" % "1.0.1",
-  "org.typelevel" %% "cats-effect" % "0.8",
-  "org.typelevel" %% "mouse" % "0.16",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
+  "io.estatico" %% "newtype" % "0.4.0",
+  "org.typelevel" %% "cats-core" % "1.1.0",
+  "org.typelevel" %% "cats-effect" % "0.10",
+  "org.typelevel" %% "mouse" % "0.17",
 
-  "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.14.0" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 )
 
 scalacOptions in Global ++= Seq(

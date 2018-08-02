@@ -22,6 +22,27 @@ final class TimerMonitorWatcher[F[_]: Effect: Unsafe](
 
   private val timer = new Timer()
 
+  def run1(): Unit = {
+    val task = new TimerTask {
+      override def run(): Unit = {
+        logger.info("MonitorWatcher dispatching metrics to be sent...")
+        val failPrefix = s"Sending metric(s) failed with: "
+        execStyle match {
+          case Async => monitorManager.sendChunk().runAsync{
+            case Left(err) => IO(logger.error(s"$failPrefix$err"))
+            case _: Right[_,_] => IO.unit
+          }.unsafeRunSync()
+          case Sync => monitorManager.sendChunk().unsafeAttempt().fold(
+            err => logger.error(s"$failPrefix$err"),
+            _ => ()
+          )
+        }
+      }
+    }
+    logger.info("Starting monitor watcher")
+    timer.scheduleAtFixedRate(task, 0, conf.sendMetricsInterval.toMillis)
+  }
+
   /** If [[Async]], will cut another thread to send metrics, otherwise will happen
     * on current thread */
   override def run(): Unit = {
